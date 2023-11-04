@@ -1,0 +1,4 @@
+bin/
+bin/**
+openshift-agent-install/generated_manifests/
+openshift-agent-install/generated_manifests/**
