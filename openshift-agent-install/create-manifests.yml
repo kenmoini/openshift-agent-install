@@ -16,6 +16,10 @@
     base_domain: d70.kemo.labs
     cluster_name: suki-sno
 
+    create_ztp_manifests: true
+    openshift_version: 4.14.1
+    cluster_architecture: x86_64 # x86_64 | s390x | ppc64le | aarch64 | multi
+
     # Node Counts the installer will expect
     control_plane_replicas: 1
     app_node_replicas: 0
@@ -198,6 +202,20 @@
         src: agent-config.yml.j2
         dest: "./generated_manifests/{{ cluster_name }}/agent-config.yaml"
         mode: '0644'
+
+    - name: Template the ZTP manifests
+      when: create_ztp_manifests
+      ansible.builtin.template:
+        src: "{{ manifest_item }}.yml.j2"
+        dest: "./generated_manifests/{{ cluster_name }}/{{ manifest_item }}.yaml"
+        mode: '0644'
+      loop:
+        - agentclusterinstall
+        - clusterdeployment
+        - clusterimageset
+        - pull-secret
+      loop_control:
+        loop_var: manifest_item
 
     - name: Template the ImageDigestMirrorSet and the ImageTagMirrorSet if this is a disconnected install
       when: disconnected_registries is defined

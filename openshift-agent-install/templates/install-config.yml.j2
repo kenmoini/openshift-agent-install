@@ -11,8 +11,8 @@ controlPlane:
   replicas: {{ control_plane_replicas }}
 networking:
   clusterNetwork:
-    - cidr: 10.128.0.0/14
-      hostPrefix: 23
+    - cidr: {{ cluster_network_cidr }}
+      hostPrefix: {{ cluster_network_host_prefix }}
   networkType: {{ network_type }}
   serviceNetwork:
 {% for service_network in service_network_cidrs %}
@@ -70,7 +70,8 @@ proxy:
 {% endif %}
 {% endif %}
 {% if disconnected_registries is defined %}
-imageDigestSources:
+#imageDigestSources:
+imageContentSources:
 {% for registry in disconnected_registries %}
   - mirrors:
       - {{ registry.target }}

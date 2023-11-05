@@ -1,0 +1,23 @@
+---
+apiVersion: extensions.hive.openshift.io/v1beta1
+kind: AgentClusterInstall
+metadata:
+  name: {{ cluster_name }}
+  namespace: {{ cluster_name }}
+spec:
+  clusterDeploymentRef:
+    name: {{ cluster_name }}
+  imageSetRef:
+    name: openshift-{{ openshift_version }}
+  networking:
+    clusterNetwork:
+      - cidr: {{ cluster_network_cidr }}
+        hostPrefix: {{ cluster_network_host_prefix }}
+    serviceNetwork:
+{% for service_network in service_network_cidrs %}
+      - {{ service_network }}
+{% endfor %}
+  provisionRequirements:
+    controlPlaneAgents: {{ control_plane_replicas }}
+    workerAgents: {{ app_node_replicas }}
+  sshPublicKey: '{{ lookup('file', ssh_public_key_path) }}'
