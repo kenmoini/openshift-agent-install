@@ -1,0 +1,79 @@
+---
+apiVersion: v1
+metadata:
+  name: {{ cluster_name }}
+baseDomain: {{ base_domain }}
+compute:
+  - name: worker
+    replicas: {{ app_node_replicas }}
+controlPlane:
+  name: master
+  replicas: {{ control_plane_replicas }}
+networking:
+  clusterNetwork:
+    - cidr: 10.128.0.0/14
+      hostPrefix: 23
+  networkType: {{ network_type }}
+  serviceNetwork:
+{% for service_network in service_network_cidrs %}
+    - {{ service_network }}
+{% endfor %}
+{% if machine_network_cidrs is defined %}
+  machineNetwork:
+{% for machine_network in machine_network_cidrs %}
+    - cidr: {{ machine_network }}
+{% endfor %}
+{% endif %}
+platform:
+{% if platform_type == 'none' %}
+  none: {}
+{% endif %}
+{% if platform_type == 'baremetal' %}
+  baremetal:
+    apiVIPs:
+{% for api_vip in api_vips %}
+    - {{ api_vip }}
+{% endfor %}
+    ingressVIPs:
+{% for app_vip in app_vips %}
+    - {{ app_vip }}
+{% endfor %}
+{% endif %}
+{% if platform_type == 'vsphere' %}
+  vsphere:
+    vcenter:
+      host: {{ vcenter_host }}
+      username: {{ vcenter_username }}
+      password: {{ vcenter_password }}
+      datacenter: {{ vcenter_datacenter }}
+      defaultDatastore: {{ vcenter_default_datastore }}
+      cluster: {{ vcenter_cluster }}
+{% endif %}
+fips: false
+pullSecret: '{{ lookup('file', pull_secret_path) }}'
+sshKey: '{{ lookup('file', ssh_public_key_path) }}'
+{% if additional_trust_bundle is defined %}
+additionalTrustBundlePolicy: {{ additional_trust_bundle_policy }}
+additionalTrustBundle: |
+  {{ additional_trust_bundle | indent(2) }}
+{% endif %}
+{% if proxy is defined %}
+proxy:
+{% if proxy.http_proxy is defined %}
+  httpProxy: {{ proxy.http_proxy }}
+{% endif %}
+{% if proxy.https_proxy is defined %}
+  httpsProxy: {{ proxy.https_proxy }}
+{% endif %}
+{% if proxy.no_proxy is defined %}
+  noProxy: {{ proxy.no_proxy | join(',') }}
+{% endif %}
+{% endif %}
+{% if disconnected_registries is defined %}
+imageDigestSources:
+{% for registry in disconnected_registries %}
+  - mirrors:
+      - {{ registry.target }}
+    source: {{ registry.source }}
+{% endfor %}
+{% endif %}

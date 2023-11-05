@@ -1,0 +1,25 @@
+## Make sure to delete the ImageContentSourcePolicy from the Cluster that was used to install the cluster
+---
+apiVersion: config.openshift.io/v1
+kind: ImageDigestMirrorSet
+metadata:
+    name: global
+spec:
+  imageDigestMirrors:
+{% for registry in disconnected_registries %}
+    - mirrors:
+        - {{ registry.target }}
+      source: {{ registry.source }}
+{% endfor %}
+---
+apiVersion: config.openshift.io/v1
+kind: ImageTagMirrorSet
+metadata:
+    name: global
+spec:
+  imageTagMirrors:
+{% for registry in disconnected_registries %}
+    - mirrors:
+        - {{ registry.target }}
+      source: {{ registry.source }}
+{% endfor %}

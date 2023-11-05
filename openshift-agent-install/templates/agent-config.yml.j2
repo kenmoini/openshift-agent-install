@@ -1,0 +1,46 @@
+---
+apiVersion: v1alpha1
+kind: AgentConfig
+metadata:
+  name: {{ cluster_name }}
+rendezvousIP: {{ rendezvous_ip }}
+#bootArtifactsBaseURL: http://user-specified-infra.com
+{% if ntp_servers is defined %}
+additionalNTPSources:
+{% for ntp_server in ntp_servers %}
+  - {{ ntp_server }}
+{% endfor %}
+{% endif %}
+hosts:
+{% for node in nodes %}
+  - hostname: {{ node.hostname }}
+    role: {{ node.role | default('master') }}
+    interfaces:
+{% for interface in node.interfaces %}
+      - name: {{ interface.name }}
+        macAddress: {{ interface.mac_address }}
+{% endfor %}
+{% if node.rootDeviceHints is defined %}
+    rootDeviceHints:
+      deviceName: {{ node.rootDeviceHints.deviceName }}
+{% endif %}
+    networkConfig:
+      interfaces:
+{% for interface in node.networkConfig.interfaces %}
+        - {{ interface | to_nice_yaml | indent(10) }}
+{% endfor %}
+      dns-resolver:
+        config:
+{% if dns_servers is defined %}
+          server:
+{% for server in dns_servers %}
+            - {{ server }}
+{% endfor %}
+{% endif %}
+{% if dns_search_domains is defined %}
+          search:
+{% for server in dns_search_domains %}
+            - {{ server }}
+{% endfor %}
+{% endif %}
+{% endfor %}

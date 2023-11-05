@@ -1,0 +1,12 @@
+# https://docs.openshift.com/container-platform/4.13/updating/updating-restricted-network-cluster/restricted-network-update-osus.html
+---
+apiVersion: updateservice.operator.openshift.io/v1
+kind: UpdateService
+metadata:
+  name: update-service-oc-mirror
+  namespace: openshift-update-service
+spec:
+  graphDataImage: disconn-harbor.d70.kemo.labs/quay-ptc/openshift/graph-image@sha256:d0c8b1c9774ca8c865236add85c1ac14ae127fc3748d66fc89a1f52d16667098
+  #releases: disconn-harbor.d70.kemo.labs/oc-mirror/openshift/release-images
+  releases: disconn-harbor.d70.kemo.labs/quay-ptc/openshift-release-dev/ocp-release
+  replicas: 1
