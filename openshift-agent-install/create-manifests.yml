@@ -16,10 +16,6 @@
     base_domain: d70.kemo.labs
     cluster_name: suki-sno
 
-    create_ztp_manifests: true
-    openshift_version: 4.14.1
-    cluster_architecture: x86_64 # x86_64 | s390x | ppc64le | aarch64 | multi
-
     # Node Counts the installer will expect
     control_plane_replicas: 1
     app_node_replicas: 0
@@ -102,6 +98,12 @@
 
     # Optional Disconnected Registry Mirror configuration
     disconnected_registries:
+      # Must have a direct reference to the openshift-release-dev/ocp-release and openshift-release-dev/ocp-v4.0-art-dev paths
+      - target: disconn-harbor.d70.kemo.labs/quay-ptc/openshift-release-dev/ocp-release
+        source: quay.io/openshift-release-dev/ocp-release
+      - target: disconn-harbor.d70.kemo.labs/quay-ptc/openshift-release-dev/ocp-v4.0-art-dev
+        source: quay.io/openshift-release-dev/ocp-v4.0-art-dev
+
       - target: disconn-harbor.d70.kemo.labs/quay-ptc
         source: quay.io
       - target: disconn-harbor.d70.kemo.labs/registry-redhat-io-ptc
@@ -161,6 +163,10 @@
       7yx0UiBuGVfG66I09YM1jR9nq7mKv30Sq1Fa/X76XyxDBGk0rLRCw02Ziq0rS8WG
       S5kIfhw8FM52x6RHCwRicArO8HSTCf4ueEkFL7yj5xSI
       -----END CERTIFICATE-----
+
+    create_ztp_manifests: false
+    openshift_version: 4.14.1
+    cluster_architecture: x86_64 # x86_64 | s390x | ppc64le | aarch64 | multi
 
   tasks:
 
