@@ -34,7 +34,7 @@ openshift-install agent wait-for install-complete --dir ./generated_manifests/<c
 
 You'll need to provide it some variables such as the following:
 
-#### SNO Deployment
+#### General Configuration Variables
 
 ```yaml=
 # pull_secret path is the path to the pull-secret for the cluster
@@ -47,10 +47,6 @@ pull_secret_path: ~/ocp-install-pull-secret.json
 # Cluster metadata
 base_domain: d70.kemo.labs
 cluster_name: suki-sno
-
-# Node Counts the installer will expect
-control_plane_replicas: 1
-app_node_replicas: 0
 
 # platform_type is the type of platform to use for the cluster (baremetal, vsphere, none)
 # must be none for SNO
@@ -93,39 +89,6 @@ network_type: OVNKubernetes
 
 # rendezvous_ip is the IP address of the node that will be used for the bootstrap node
 rendezvous_ip: 192.168.70.46
-
-# nodes defines the nodes to use for the cluster
-nodes:
-  - hostname: sno
-    rootDeviceHints:
-      deviceName: /dev/nvme0n1
-    interfaces:
-      - name: enp97s0f0
-        mac_address: D0:50:99:DD:58:95
-    networkConfig:
-      interfaces:
-        - name: enp97s0f0.70
-          type: vlan
-          state: up
-          vlan:
-            id: 70
-            base-iface: enp97s0f0
-          ipv4:
-            enabled: true
-            address:
-              - ip: 192.168.70.46
-                prefix-length: 23
-            dhcp: false
-        - name: enp97s0f0
-          type: ethernet
-          state: up
-          mac-address: D0:50:99:DD:58:95
-      routes:
-        config:
-          - destination: 0.0.0.0/0
-            next-hop-address: 192.168.70.1
-            next-hop-interface: enp97s0f0.70
-            table-id: 254
 
 # Optional Disconnected Registry Mirror configuration
 disconnected_registries:
@@ -196,15 +159,418 @@ additional_trust_bundle: |
   -----END CERTIFICATE-----
 ```
 
+#### SNO Deployment
+
+```yaml=
+# Node Counts the installer will expect
+control_plane_replicas: 1
+app_node_replicas: 0
+
+# nodes defines the nodes to use for the cluster
+nodes:
+  - hostname: sno
+    rootDeviceHints:
+      deviceName: /dev/nvme0n1
+    interfaces:
+      - name: enp97s0f0
+        mac_address: D0:50:99:DD:58:95
+    networkConfig:
+      interfaces:
+        - name: enp97s0f0.70
+          type: vlan
+          state: up
+          vlan:
+            id: 70
+            base-iface: enp97s0f0
+          ipv4:
+            enabled: true
+            address:
+              - ip: 192.168.70.46
+                prefix-length: 23
+            dhcp: false
+        - name: enp97s0f0
+          type: ethernet
+          state: up
+          mac-address: D0:50:99:DD:58:95
+      routes:
+        config:
+          - destination: 0.0.0.0/0
+            next-hop-address: 192.168.70.1
+            next-hop-interface: enp97s0f0.70
+            table-id: 254
+```
+
 #### 3 Node Cluster Deployment
 
+```yaml=
+# Node Counts the installer will expect
+control_plane_replicas: 3
+app_node_replicas: 0
+
+# nodes defines the nodes to use for the cluster
+nodes:
+  - hostname: node1
+    role: master
+    rootDeviceHints:
+      deviceName: /dev/nvme0n1
+    interfaces:
+      - name: enp97s0f0
+        mac_address: D0:50:99:DD:58:95
+    networkConfig:
+      interfaces:
+        - name: enp97s0f0
+          type: ethernet
+          state: up
+          mac-address: D0:50:99:DD:58:95
+          ipv4:
+            enabled: true
+            address:
+              - ip: 192.168.70.46
+                prefix-length: 23
+            dhcp: false
+      routes:
+        config:
+          - destination: 0.0.0.0/0
+            next-hop-address: 192.168.70.1
+            next-hop-interface: enp97s0f0
+            table-id: 254
+
+  - hostname: node2
+    role: master
+    rootDeviceHints:
+      deviceName: /dev/nvme0n1
+    interfaces:
+      - name: enp97s0f0
+        mac_address: D0:50:99:DD:58:96
+    networkConfig:
+      interfaces:
+        - name: enp97s0f0
+          type: ethernet
+          state: up
+          mac-address: D0:50:99:DD:58:96
+          ipv4:
+            enabled: true
+            address:
+              - ip: 192.168.70.47
+                prefix-length: 23
+            dhcp: false
+      routes:
+        config:
+          - destination: 0.0.0.0/0
+            next-hop-address: 192.168.70.1
+            next-hop-interface: enp97s0f0
+            table-id: 254
+
+  - hostname: node3
+    role: master
+    rootDeviceHints:
+      deviceName: /dev/nvme0n1
+    interfaces:
+      - name: enp97s0f0
+        mac_address: D0:50:99:DD:58:97
+    networkConfig:
+      interfaces:
+        - name: enp97s0f0
+          type: ethernet
+          state: up
+          mac-address: D0:50:99:DD:58:97
+          ipv4:
+            enabled: true
+            address:
+              - ip: 192.168.70.48
+                prefix-length: 23
+            dhcp: false
+      routes:
+        config:
+          - destination: 0.0.0.0/0
+            next-hop-address: 192.168.70.1
+            next-hop-interface: enp97s0f0
+            table-id: 254
+```
 
 #### HA Cluster Deployment
+
+```yaml=
+# Node Counts the installer will expect
+control_plane_replicas: 3
+app_node_replicas: 2
+
+# nodes defines the nodes to use for the cluster
+nodes:
+  - hostname: cp1
+    role: master
+    rootDeviceHints:
+      deviceName: /dev/nvme0n1
+    interfaces:
+      - name: enp97s0f0
+        mac_address: D0:50:99:DD:58:95
+    networkConfig:
+      interfaces:
+        - name: enp97s0f0
+          type: ethernet
+          state: up
+          mac-address: D0:50:99:DD:58:95
+          ipv4:
+            enabled: true
+            address:
+              - ip: 192.168.70.46
+                prefix-length: 23
+            dhcp: false
+      routes:
+        config:
+          - destination: 0.0.0.0/0
+            next-hop-address: 192.168.70.1
+            next-hop-interface: enp97s0f0
+            table-id: 254
+
+  - hostname: cp2
+    role: master
+    rootDeviceHints:
+      deviceName: /dev/nvme0n1
+    interfaces:
+      - name: enp97s0f0
+        mac_address: D0:50:99:DD:58:96
+    networkConfig:
+      interfaces:
+        - name: enp97s0f0
+          type: ethernet
+          state: up
+          mac-address: D0:50:99:DD:58:96
+          ipv4:
+            enabled: true
+            address:
+              - ip: 192.168.70.47
+                prefix-length: 23
+            dhcp: false
+      routes:
+        config:
+          - destination: 0.0.0.0/0
+            next-hop-address: 192.168.70.1
+            next-hop-interface: enp97s0f0
+            table-id: 254
+
+  - hostname: cp3
+    role: master
+    rootDeviceHints:
+      deviceName: /dev/nvme0n1
+    interfaces:
+      - name: enp97s0f0
+        mac_address: D0:50:99:DD:58:97
+    networkConfig:
+      interfaces:
+        - name: enp97s0f0
+          type: ethernet
+          state: up
+          mac-address: D0:50:99:DD:58:97
+          ipv4:
+            enabled: true
+            address:
+              - ip: 192.168.70.48
+                prefix-length: 23
+            dhcp: false
+      routes:
+        config:
+          - destination: 0.0.0.0/0
+            next-hop-address: 192.168.70.1
+            next-hop-interface: enp97s0f0
+            table-id: 254
+
+  - hostname: app1
+    role: worker
+    rootDeviceHints:
+      deviceName: /dev/nvme0n1
+    interfaces:
+      - name: enp97s0f0
+        mac_address: D0:50:99:DD:58:98
+    networkConfig:
+      interfaces:
+        - name: enp97s0f0
+          type: ethernet
+          state: up
+          mac-address: D0:50:99:DD:58:98
+          ipv4:
+            enabled: true
+            address:
+              - ip: 192.168.70.49
+                prefix-length: 23
+            dhcp: false
+      routes:
+        config:
+          - destination: 0.0.0.0/0
+            next-hop-address: 192.168.70.1
+            next-hop-interface: enp97s0f0
+            table-id: 254
+
+  - hostname: app2
+    role: worker
+    rootDeviceHints:
+      deviceName: /dev/nvme0n1
+    interfaces:
+      - name: enp97s0f0
+        mac_address: D0:50:99:DD:58:99
+    networkConfig:
+      interfaces:
+        - name: enp97s0f0
+          type: ethernet
+          state: up
+          mac-address: D0:50:99:DD:58:99
+          ipv4:
+            enabled: true
+            address:
+              - ip: 192.168.70.50
+                prefix-length: 23
+            dhcp: false
+      routes:
+        config:
+          - destination: 0.0.0.0/0
+            next-hop-address: 192.168.70.1
+            next-hop-interface: enp97s0f0
+            table-id: 254
+```
+
+---
 
 ## NMState Configuration Examples
 
 ### VLAN
 
+```yaml=
+nodes:
+  - hostname: sno
+    rootDeviceHints:
+      deviceName: /dev/nvme0n1
+    interfaces:
+      - name: enp97s0f0
+        mac_address: D0:50:99:DD:58:95
+    networkConfig:
+      interfaces:
+        - name: enp97s0f0.70
+          type: vlan
+          state: up
+          vlan:
+            id: 70
+            base-iface: enp97s0f0
+          ipv4:
+            enabled: true
+            address:
+              - ip: 192.168.70.46
+                prefix-length: 23
+            dhcp: false
+        - name: enp97s0f0
+          type: ethernet
+          state: up
+          mac-address: D0:50:99:DD:58:95
+      routes:
+        config:
+          - destination: 0.0.0.0/0
+            next-hop-address: 192.168.70.1
+            next-hop-interface: enp97s0f0.70
+            table-id: 254
+```
+
 ### Bond
 
+```yaml=
+nodes:
+  - hostname: sno
+    rootDeviceHints:
+      deviceName: /dev/nvme0n1
+    interfaces:
+      - name: enp97s0f0
+        mac_address: D0:50:99:DD:58:95
+      - name: enp97s0f1
+        mac_address: D0:50:99:DD:58:96
+    networkConfig:
+      interfaces:
+        - name: bond0
+          type: bond
+          state: up
+          ipv4:
+            address:
+              - ip: 192.0.2.1
+                prefix-length: 24
+            dhcp: false
+            enabled: true
+          link-aggregation:
+            # mode=1 active-backup
+            # mode=2 balance-xor
+            # mode=4 802.3ad
+            # mode=5 balance-tlb
+            # mode=6 balance-alb
+            mode: 802.3ad
+            port:
+              - enp97s0f0
+              - enp97s0f1
+
+        - name: enp97s0f0
+          type: ethernet
+          state: up
+          mac-address: D0:50:99:DD:58:95
+        - name: enp97s0f1
+          type: ethernet
+          state: up
+          mac-address: D0:50:99:DD:58:96
+      routes:
+        config:
+          - destination: 0.0.0.0/0
+            next-hop-address: 192.168.70.1
+            next-hop-interface: bond0
+            table-id: 254
+```
+
 ### Bond + VLAN
+
+```yaml=
+nodes:
+  - hostname: sno
+    rootDeviceHints:
+      deviceName: /dev/nvme0n1
+    interfaces:
+      - name: enp97s0f0
+        mac_address: D0:50:99:DD:58:95
+      - name: enp97s0f1
+        mac_address: D0:50:99:DD:58:96
+    networkConfig:
+      interfaces:
+        - name: bond0.70
+          type: vlan
+          state: up
+          vlan:
+            id: 70
+            base-iface: bond0
+          ipv4:
+            enabled: true
+            address:
+              - ip: 192.168.70.46
+                prefix-length: 23
+            dhcp: false
+
+        - name: bond0
+          type: bond
+          state: up
+          link-aggregation:
+            # mode=1 active-backup
+            # mode=2 balance-xor
+            # mode=4 802.3ad
+            # mode=5 balance-tlb
+            # mode=6 balance-alb
+            mode: 802.3ad
+            port:
+              - enp97s0f0
+              - enp97s0f1
+
+        - name: enp97s0f0
+          type: ethernet
+          state: up
+          mac-address: D0:50:99:DD:58:95
+        - name: enp97s0f1
+          type: ethernet
+          state: up
+          mac-address: D0:50:99:DD:58:96
+      routes:
+        config:
+          - destination: 0.0.0.0/0
+            next-hop-address: 192.168.70.1
+            next-hop-interface: bond0.70
+            table-id: 254
+```
