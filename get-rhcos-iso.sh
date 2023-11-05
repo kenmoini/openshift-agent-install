@@ -30,3 +30,5 @@ wget ${RHCOS_ISO}
 
 # Clean up
 rm -rf ${TMP_DIR}
+
+echo "Move the ISO to the ~/.cache/agent/image_cache/coreos-${ARCHITECTURE}.iso path"
