@@ -487,8 +487,8 @@ nodes:
           state: up
           ipv4:
             address:
-              - ip: 192.0.2.1
-                prefix-length: 24
+              - ip: 192.168.70.46
+                prefix-length: 23
             dhcp: false
             enabled: true
           link-aggregation:
