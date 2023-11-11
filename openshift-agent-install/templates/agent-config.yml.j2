@@ -43,4 +43,11 @@ hosts:
             - {{ server }}
 {% endfor %}
 {% endif %}
+{% if node.networkConfig.routes is defined %}
+      routes:
+        config:
+{% for route in node.networkConfig.routes.config %}
+        - {{ route | to_nice_yaml | indent(10) }}
+{% endfor %}
+{% endif %}
 {% endfor %}
