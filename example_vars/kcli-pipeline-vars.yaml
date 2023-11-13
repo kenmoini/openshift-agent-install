@@ -54,7 +54,7 @@
     network_type: OVNKubernetes
 
     # rendezvous_ip is the IP address of the node that will be used for the bootstrap node
-    rendezvous_ip: 192.168.122.20
+    rendezvous_ip: 192.168.122.80
 
     # nodes defines the nodes to use for the cluster
     nodes:
