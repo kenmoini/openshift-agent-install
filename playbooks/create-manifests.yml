@@ -13,7 +13,7 @@
     # ssh_public_key_path: ~/.ssh/id_rsa.pub
 
     # Cluster metadata
-    base_domain: d70.kemo.labs
+    base_domain: v60.lab.kemo.network
     cluster_name: suki-sno
 
     # Node Counts the installer will expect
@@ -26,14 +26,14 @@
 
     # VIPs - set as a list in case this is a dual-stack cluster
     api_vips:
-      - 192.168.70.46
+      - 192.168.60.147
 
     app_vips:
-      - 192.168.70.46
+      - 192.168.60.147
 
     # Optional NTP Servers
     ntp_servers:
-      - deep-thought.kemo.labs
+      - ntp.kemo.labs
 
     # Optional DNS Server definitions
     dns_servers:
@@ -54,13 +54,13 @@
 
     # machine_network_cidr is the CIDR space for the Machines in the cluster
     machine_network_cidrs:
-      - 192.168.70.0/23
+      - 192.168.60.0/23
 
     # networkType is the type of network to use for the cluster (OpenShiftSDN, OVNKubernetes)
     network_type: OVNKubernetes
 
     # rendezvous_ip is the IP address of the node that will be used for the bootstrap node
-    rendezvous_ip: 192.168.70.46
+    rendezvous_ip: 192.168.60.147
 
     # nodes defines the nodes to use for the cluster
     nodes:
@@ -73,16 +73,16 @@
             mac_address: D0:50:99:DD:58:95
         networkConfig:
           interfaces:
-            - name: enp97s0f0.70
+            - name: enp97s0f0.60
               type: vlan
               state: up
               vlan:
-                id: 70
+                id: 60
                 base-iface: enp97s0f0
               ipv4:
                 enabled: true
                 address:
-                  - ip: 192.168.70.46
+                  - ip: 192.168.60.147
                     prefix-length: 23
                 dhcp: false
             - name: enp97s0f0
@@ -92,24 +92,24 @@
           routes:
             config:
               - destination: 0.0.0.0/0
-                next-hop-address: 192.168.70.1
-                next-hop-interface: enp97s0f0.70
+                next-hop-address: 192.168.60.1
+                next-hop-interface: enp97s0f0.60
                 table-id: 254
 
     # Optional Disconnected Registry Mirror configuration
-    disconnected_registries:
-      # Must have a direct reference to the openshift-release-dev/ocp-release and openshift-release-dev/ocp-v4.0-art-dev paths
-      - target: disconn-harbor.d70.kemo.labs/quay-ptc/openshift-release-dev/ocp-release
-        source: quay.io/openshift-release-dev/ocp-release
-      - target: disconn-harbor.d70.kemo.labs/quay-ptc/openshift-release-dev/ocp-v4.0-art-dev
-        source: quay.io/openshift-release-dev/ocp-v4.0-art-dev
-
-      - target: disconn-harbor.d70.kemo.labs/quay-ptc
-        source: quay.io
-      - target: disconn-harbor.d70.kemo.labs/registry-redhat-io-ptc
-        source: registry.redhat.io
-      - target: disconn-harbor.d70.kemo.labs/registry-connect-redhat-com-ptc
-        source: registry.connect.redhat.com
+    # disconnected_registries:
+    #   # Must have a direct reference to the openshift-release-dev/ocp-release and openshift-release-dev/ocp-v4.0-art-dev paths
+    #   - target: disconn-harbor.d70.kemo.labs/quay-ptc/openshift-release-dev/ocp-release
+    #     source: quay.io/openshift-release-dev/ocp-release
+    #   - target: disconn-harbor.d70.kemo.labs/quay-ptc/openshift-release-dev/ocp-v4.0-art-dev
+    #     source: quay.io/openshift-release-dev/ocp-v4.0-art-dev
+    # 
+    #   - target: disconn-harbor.d70.kemo.labs/quay-ptc
+    #     source: quay.io
+    #   - target: disconn-harbor.d70.kemo.labs/registry-redhat-io-ptc
+    #     source: registry.redhat.io
+    #   - target: disconn-harbor.d70.kemo.labs/registry-connect-redhat-com-ptc
+    #     source: registry.connect.redhat.com
 
     # Optional Outbound Proxy Configuration
     # proxy:
@@ -165,7 +165,7 @@
       -----END CERTIFICATE-----
 
     create_ztp_manifests: false
-    openshift_version: 4.14.1
+    openshift_version: 4.14.10
     cluster_architecture: x86_64 # x86_64 | s390x | ppc64le | aarch64 | multi
 
   tasks:

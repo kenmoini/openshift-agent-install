@@ -12,11 +12,35 @@ This repo holds some utilities to easily leverage the OpenShift Agent Based Inst
 - Red Hat OpenShift Pull Secret saved to a file: https://console.redhat.com/openshift/downloads#tool-pull-secret
 - Any other Pull Secret for a disconnected registry, joined with the Red Hat OpenShift Pull Secret
 
-## Usage
+## Usage - Declarative
 
-### Templating Agent Based Installer Manifests
+In the `examples` directory you'll find sample cluster configuration variables.  By defining the cluster in its own folder with the `cluster.yml` and `nodes.yml` files, you can easily template and generate the ABI ISO in one shot with:
+
+```bash
+./hack/create-iso.sh $FOLDER_NAME
+```
+
+This script will take those defined files, generate the templates with Ansible, create the ISO, and present next step instructions.
+
+Alternatively, you can perform those steps manually with the instructions below.
+
+---
+
+## Usage - Manual
+
+### 1. Templating Agent Based Installer Manifests
 
 You can quickly and easily template the ABI manifests with the provided `create-manifests.yml` Ansible Playbook.
+
+```bash=
+# Make sure you're in the `playbooks` directory
+cd playbooks/
+
+# Execute the automation with your custom cluster configuration set in a YAML file
+ansible-playbook -e "@your-cluster-vars.yml" create-manifests.yml
+```
+
+### 2. Creating the Agent Installer ISO
 
 After running the automation to generate the manifests, you can create the ISO with the following:
 
