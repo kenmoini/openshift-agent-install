@@ -1,0 +1,40 @@
+# Node Counts the installer will expect
+control_plane_replicas: 1
+app_node_replicas: 0
+
+# nodes defines the nodes to use for the cluster
+nodes:
+  - hostname: suki
+    rootDeviceHints:
+      deviceName: /dev/nvme0n1
+    interfaces:
+      - name: eno1np0
+        mac_address: 7C:C2:55:E1:7E:F8
+    networkConfig:
+      interfaces:
+        - name: eno1np0.60
+          type: vlan
+          state: up
+          vlan:
+            id: 60
+            base-iface: eno1np0
+          ipv4:
+            enabled: true
+            address:
+              - ip: 192.168.60.46
+                prefix-length: 23
+            dhcp: false
+        - name: eno1np0
+          type: ethernet
+          state: up
+          mac-address: 7C:C2:55:E1:7E:F8
+        - name: enp71s0f3u1u2c2
+          type: ethernet
+          state: down
+          mac-address: 66:73:7E:F3:FD:1D
+      routes:
+        config:
+          - destination: 0.0.0.0/0
+            next-hop-address: 192.168.60.1
+            next-hop-interface: eno1np0.60
+            table-id: 254
