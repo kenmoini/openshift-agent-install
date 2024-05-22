@@ -167,12 +167,13 @@
     create_ztp_manifests: false
     openshift_version: 4.14.10
     cluster_architecture: x86_64 # x86_64 | s390x | ppc64le | aarch64 | multi
+    generated_asset_path: "./generated_manifests"
 
   tasks:
 
     - name: Make a directory for the per-cluster manifests
       ansible.builtin.file:
-        path: "./generated_manifests/{{ cluster_name }}"
+        path: "{{ generated_asset_path }}/{{ cluster_name }}"
         state: directory
         mode: '0755'
 
@@ -181,13 +182,13 @@
       block:
         - name: Check to see if the key pair already exists
           ansible.builtin.stat:
-            path: "./generated_manifests/{{ cluster_name }}/ssh_key"
+            path: "{{ generated_asset_path }}/{{ cluster_name }}/ssh_key"
           register: ssh_key_exists
 
         - name: Create a new key pair for the cluster
           when: not ssh_key_exists.stat.exists
           community.crypto.openssh_keypair:
-            path: "./generated_manifests/{{ cluster_name }}/ssh_key"
+            path: "{{ generated_asset_path }}/{{ cluster_name }}/ssh_key"
             type: rsa
             state: present
             size: 4096
@@ -195,25 +196,25 @@
 
         - name: Set the fact for the ssh_public_key_path
           ansible.builtin.set_fact:
-            ssh_public_key_path: "./generated_manifests/{{ cluster_name }}/ssh_key.pub"
+            ssh_public_key_path: "{{ generated_asset_path }}/{{ cluster_name }}/ssh_key.pub"
 
     - name: Template the install-config.yml file
       ansible.builtin.template:
         src: install-config.yml.j2
-        dest: "./generated_manifests/{{ cluster_name }}/install-config.yaml"
+        dest: "{{ generated_asset_path }}/{{ cluster_name }}/install-config.yaml"
         mode: '0644'
 
     - name: Template the agent-config.yml file
       ansible.builtin.template:
         src: agent-config.yml.j2
-        dest: "./generated_manifests/{{ cluster_name }}/agent-config.yaml"
+        dest: "{{ generated_asset_path }}/{{ cluster_name }}/agent-config.yaml"
         mode: '0644'
 
     - name: Template the ZTP manifests
       when: create_ztp_manifests
       ansible.builtin.template:
         src: "{{ manifest_item }}.yml.j2"
-        dest: "./generated_manifests/{{ cluster_name }}/{{ manifest_item }}.yaml"
+        dest: "{{ generated_asset_path }}/{{ cluster_name }}/{{ manifest_item }}.yaml"
         mode: '0644'
       loop:
         - agentclusterinstall
@@ -227,5 +228,5 @@
       when: disconnected_registries is defined
       ansible.builtin.template:
         src: imagedigestmirrorset.yml.j2
-        dest: "./generated_manifests/{{ cluster_name }}/image-mirror-config.yaml"
+        dest: "{{ generated_asset_path }}/{{ cluster_name }}/image-mirror-config.yaml"
         mode: '0644'
