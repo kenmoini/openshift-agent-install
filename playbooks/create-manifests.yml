@@ -168,8 +168,21 @@
     openshift_version: 4.14.10
     cluster_architecture: x86_64 # x86_64 | s390x | ppc64le | aarch64 | multi
     generated_asset_path: "./generated_manifests"
+    use_site_configs: false
 
   tasks:
+
+    - name: SITECONFIG - Read in site configs
+      when:
+        - use_site_configs | bool
+        - site_config_name is defined
+      ansible.builtin.include_vars:
+        dir: "../site-config/{{ site_config_name }}"
+        extensions:
+          - 'yaml'
+          - 'yml'
+      tags:
+        - always
 
     - name: Make a directory for the per-cluster manifests
       ansible.builtin.file:
