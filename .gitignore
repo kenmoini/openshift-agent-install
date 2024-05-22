@@ -4,3 +4,5 @@ clusters/
 playbooks/generated_manifests/
 clusters/**
 playbooks/generated_manifests/**
+.vscode/
+.vscode/**
