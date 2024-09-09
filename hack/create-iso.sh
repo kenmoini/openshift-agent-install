@@ -4,7 +4,7 @@
 set -e
 
 # Where are we pulling cluster configuration from - make a `clusters` directory and store your config there, it's in .gitignore
-SITE_CONFIG_DIR="examples"
+SITE_CONFIG_DIR="${SITE_CONFIG_DIR:-examples}"
 #SITE_CONFIG_DIR="clusters"
 
 # Check to see if there was an argument passed for the cluster config
