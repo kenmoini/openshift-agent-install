@@ -1,0 +1,30 @@
+# Node Counts the installer will expect
+control_plane_replicas: 1
+app_node_replicas: 0
+
+# nodes defines the nodes to use for the cluster
+nodes:
+  - hostname: raza
+    rootDeviceHints:
+      deviceName: /dev/nvme1n1
+    interfaces:
+      - name: eno1
+        mac_address: 7C:C2:55:E3:1C:E4
+    networkConfig:
+      interfaces:
+        - name: eno1
+          type: ethernet
+          state: up
+          mac-address: 7C:C2:55:E3:1C:E4
+          ipv4:
+            enabled: true
+            address:
+              - ip: 192.168.42.40
+                prefix-length: 23
+            dhcp: false
+      routes:
+        config:
+          - destination: 0.0.0.0/0
+            next-hop-address: 192.168.42.1
+            next-hop-interface: eno1
+            table-id: 254
