@@ -51,7 +51,7 @@ platform:
 {% endif %}
 fips: false
 pullSecret: '{{ lookup('file', pull_secret_path) }}'
-sshKey: '{{ lookup('file', ssh_public_key_path) }}'
+sshKey: {{ lookup('file', ssh_public_key_path) }}
 {% if additional_trust_bundle is defined %}
 additionalTrustBundlePolicy: {{ additional_trust_bundle_policy }}
 additionalTrustBundle: |
