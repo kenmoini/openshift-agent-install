@@ -11,27 +11,43 @@ nodes:
     interfaces:
       - name: eno1
         mac_address: EC:F4:BB:C0:B9:C8
+      - name: eno2
+        mac_address: EC:F4:BB:C0:B9:CA
     networkConfig:
       interfaces:
-        - name: eno1.60
+        - name: bond0.60
           type: vlan
           state: up
           vlan:
             id: 60
-            base-iface: eno1
+            base-iface: bond0
           ipv4:
             enabled: true
             address:
               - ip: 192.168.60.44
                 prefix-length: 23
             dhcp: false
+
+        - name: bond0
+          type: bond
+          state: up
+          link-aggregation:
+            mode: 802.3ad
+            port:
+              - eno1
+              - eno2
+
         - name: eno1
           type: ethernet
           state: up
           mac-address: EC:F4:BB:C0:B9:C8
+        - name: eno2
+          type: ethernet
+          state: up
+          mac-address: EC:F4:BB:C0:B9:CA
       routes:
         config:
           - destination: 0.0.0.0/0
             next-hop-address: 192.168.60.1
-            next-hop-interface: eno1.60
+            next-hop-interface: bond0.60
             table-id: 254
