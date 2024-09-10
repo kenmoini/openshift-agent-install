@@ -6,7 +6,7 @@ app_node_replicas: 0
 nodes:
   - hostname: serenity
     rootDeviceHints:
-      deviceName: /dev/sde
+      deviceName: /dev/nvme0n1
       #deviceName: /dev/nvme0n1
     interfaces:
       - name: eno1
