@@ -1,0 +1,88 @@
+# Node Counts the installer will expect
+control_plane_replicas: 3
+app_node_replicas: 0
+
+# nodes defines the nodes to use for the cluster
+nodes:
+  - hostname: raza
+    rootDeviceHints:
+      deviceName: /dev/nvme1n1
+    interfaces:
+      - name: eno1
+        mac_address: 7C:C2:55:E3:1C:E4
+    networkConfig:
+      interfaces:
+        - name: eno1
+          type: ethernet
+          state: up
+          mac-address: 7C:C2:55:E3:1C:E4
+          ipv4:
+            enabled: true
+            address:
+              - ip: 192.168.42.40
+                prefix-length: 23
+            dhcp: false
+      routes:
+        config:
+          - destination: 0.0.0.0/0
+            next-hop-address: 192.168.42.1
+            next-hop-interface: eno1
+            table-id: 254
+
+  - hostname: suki
+    rootDeviceHints:
+      deviceName: /dev/nvme0n1
+    interfaces:
+      - name: eno1
+        mac_address: 7C:C2:55:E1:7E:F8
+      #- name: eno2
+      #  mac_address: 7C:C2:55:E1:7E:F9
+      #- name: enp71s0f3u1u2c2
+      #  mac_address: AA:25:47:CD:E0:B6
+    networkConfig:
+      interfaces:
+        - name: eno1
+          type: ethernet
+          state: up
+          mac-address: 7C:C2:55:E1:7E:F8
+          ipv4:
+            enabled: true
+            address:
+              - ip: 192.168.42.46
+                prefix-length: 23
+            dhcp: false
+        #- name: enp71s0f3u1u2c2
+        #  type: ethernet
+        #  state: down
+        #  mac-address: AA:25:47:CD:E0:B6
+      routes:
+        config:
+          - destination: 0.0.0.0/0
+            next-hop-address: 192.168.42.1
+            next-hop-interface: eno1
+            table-id: 254
+
+  - hostname: endurance
+    rootDeviceHints:
+      deviceName: /dev/nvme3n1
+    interfaces:
+      - name: eno1
+        mac_address: A0:36:9F:4A:9C:90
+    networkConfig:
+      interfaces:
+        - name: eno1
+          type: ethernet
+          state: up
+          mac-address: A0:36:9F:4A:9C:90
+          ipv4:
+            enabled: true
+            address:
+              - ip: 192.168.42.49
+                prefix-length: 23
+            dhcp: false
+      routes:
+        config:
+          - destination: 0.0.0.0/0
+            next-hop-address: 192.168.42.1
+            next-hop-interface: eno1
+            table-id: 254

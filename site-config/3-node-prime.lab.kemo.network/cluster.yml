@@ -7,18 +7,18 @@ pull_secret_path: ~/ocp-install-pull-secret.json
 
 # Cluster metadata
 base_domain: lab.kemo.network
-cluster_name: suki-sno
+cluster_name: 3-node-prime
 
 # platform_type is the type of platform to use for the cluster (baremetal, vsphere, none)
 # must be none for SNO
-platform_type: none
+platform_type: baremetal
 
 # VIPs - set as a list in case this is a dual-stack cluster
 api_vips:
-  - 192.168.42.46
+  - 192.168.42.71
 
 app_vips:
-  - 192.168.42.46
+  - 192.168.42.72
 
 # Optional NTP Servers
 ntp_servers:
@@ -49,7 +49,7 @@ machine_network_cidrs:
 network_type: OVNKubernetes
 
 # rendezvous_ip is the IP address of the node that will be used for the bootstrap node
-rendezvous_ip: 192.168.42.46
+rendezvous_ip: 192.168.42.40
 
 # Optional Disconnected Registry Mirror configuration
 disconnected_registries:
