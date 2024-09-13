@@ -10,31 +10,41 @@ nodes:
     interfaces:
       - name: eno1np0
         mac_address: 7C:C2:55:E1:7E:F8
+      #- name: eno2np1
+      #  mac_address: 7C:C2:55:E1:7E:F9
+      - name: enp71s0f3u1u2c2
+        mac_address: AA:25:47:CD:E0:B6
     networkConfig:
       interfaces:
-        - name: eno1np0.60
-          type: vlan
-          state: up
-          vlan:
-            id: 60
-            base-iface: eno1np0
-          ipv4:
-            enabled: true
-            address:
-              - ip: 192.168.60.46
-                prefix-length: 23
-            dhcp: false
+        #- name: eno1np0.60
+        #  type: vlan
+        #  state: up
+        #  vlan:
+        #    id: 60
+        #    base-iface: eno1np0
+        #  ipv4:
+        #    enabled: true
+        #    address:
+        #      - ip: 192.168.60.46
+        #        prefix-length: 23
+        #    dhcp: false
         - name: eno1np0
           type: ethernet
           state: up
           mac-address: 7C:C2:55:E1:7E:F8
+          ipv4:
+            enabled: true
+            address:
+              - ip: 192.168.42.46
+                prefix-length: 23
+            dhcp: false
         - name: enp71s0f3u1u2c2
           type: ethernet
           state: down
-          mac-address: 66:73:7E:F3:FD:1D
+          mac-address: AA:25:47:CD:E0:B6
       routes:
         config:
           - destination: 0.0.0.0/0
-            next-hop-address: 192.168.60.1
-            next-hop-interface: eno1np0.60
+            next-hop-address: 192.168.42.1
+            next-hop-interface: eno1np0
             table-id: 254
