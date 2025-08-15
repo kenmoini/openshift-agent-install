@@ -7,16 +7,20 @@ This repo holds some utilities to easily leverage the OpenShift Agent Based Inst
 - A RHEL system to work from
 - OpenShift CLI Tools - run `./download-openshift-cli.sh` then `sudo cp ./bin/* /usr/local/bin/`
 - NMState CLI `dnf install nmstate`
-- Ansible Core `dnf install ansible-core`
-- Ansible Collections for the automation: `ansible-galaxy install -r openshift-agent-install/collections/requirements.yml`
+- Ansible Core `dnf install ansible-core` - or AAP
+- Ansible Collections for the automation: `ansible-galaxy install -r execution-environment/collections/requirements.yml`
 - Red Hat OpenShift Pull Secret saved to a file: https://console.redhat.com/openshift/downloads#tool-pull-secret
-- Any other Pull Secret for a disconnected registry, joined with the Red Hat OpenShift Pull Secret
+- Any other Pull Secret for a disconnected registry, joined with the Red Hat OpenShift Pull Secret.  [Handy script to join pull secret files](https://github.com/kenmoini/disconnected-openshift/blob/main/scripts/join-auths.sh).
 
 ## Usage - Declarative
 
 In the `examples` directory you'll find sample cluster configuration variables.  By defining the cluster in its own folder with the `cluster.yml` and `nodes.yml` files, you can easily template and generate the ABI ISO in one shot with:
 
 ```bash
+# Optionally, change the path to the site configs from the default ./examples
+export SITE_CONFIG_DIR="./site-configs"
+
+# Create an ISO from the defined cluster.yml and nodes.yml file
 ./hack/create-iso.sh $FOLDER_NAME
 ```
 
