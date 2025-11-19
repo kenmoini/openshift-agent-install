@@ -17,14 +17,14 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   call-deploy-workflow:
-    uses: kenmoini/ansible-ee-builder/.github/workflows/build-ee-base.yml@main
+    uses: kenmoini/disconnected-openshift/.github/workflows/base-build-ee.yml@main
     with:
       REGISTRY_HOSTNAME: quay.io
       REGISTRY_PATH: kenmoini
       EE_IMAGE_NAME: 'openshift-agent-install-ee'
       EE_IMAGE_TAG: 'latest'
       EE_FOLDER_NAME: 'execution-environment'
-      EE_FILE_NAME: execution-environment.yaml
+      EE_FILE_NAME: execution-environment.yml
     secrets:
       REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_TOKEN }}
