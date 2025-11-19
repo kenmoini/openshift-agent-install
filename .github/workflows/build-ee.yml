@@ -27,6 +27,6 @@ jobs:
       EE_FILE_NAME: execution-environment.yaml
     secrets:
       REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
-      REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+      REGISTRY_PASSWORD: ${{ secrets.REGISTRY_TOKEN }}
       # REDHAT_USERNAME: ${{ secrets.REDHAT_USERNAME }}
       # REDHAT_PASSWORD: ${{ secrets.REDHAT_PASSWORD }}
